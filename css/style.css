@@ -1,0 +1,71 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+h1{
+    text-align: center;
+}
+.cards_inner{
+    display: flex;
+    justify-content: space-around;
+    margin: 5em;
+}
+.cards_item{
+    width: 33%;
+    text-align: center;
+}
+.form_create{
+    text-align: center;
+    width: 550px;
+    margin: 0 auto;
+}
+li{
+    border: 2px solid cadetblue;
+    display: flex;
+    justify-content: space-around;
+    padding: .5em 2rem;
+    margin: 1rem;
+    border-radius: 1em;
+}
+.column_div{
+    border: 2px solid cadetblue;
+    width: 80%;
+    margin: 2rem auto;
+
+
+}
+.column_btn{
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    font-width:bold;
+    border: 1px solid gainsboro;
+}
+.done{
+    text-decoration: line-through;
+    text-decoration-color: darkred ;
+    text-decoration-thickness: 2px
+}
+.form_div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1em;
+}
+label{
+    margin: 0 2em;
+}
+.form_input{
+    border: 2px solid cadetblue;
+    border-radius: 1em;
+    padding: 5px 10px;
+}
+.fort_submit{
+    border: 2px solid cadetblue;
+    background-color: cadetblue;
+    color: white;
+    border-radius: 1em;
+    padding: 5px 10px;
+}
+
+/* animation */
