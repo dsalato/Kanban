@@ -5,6 +5,10 @@ body{
 h1{
     text-align: center;
 }
+a{
+    text-decoration: none;
+    color: darkred;
+}
 .cards_inner{
     display: flex;
     justify-content: space-around;
@@ -19,6 +23,11 @@ h1{
     width: 550px;
     margin: 0 auto;
 }
+textarea{
+    resize: none;
+    width: 40%;
+    height: 80px;
+}
 li{
     border: 2px solid cadetblue;
     display: flex;
@@ -31,6 +40,7 @@ li{
     border: 2px solid cadetblue;
     width: 80%;
     margin: 2rem auto;
+    padding-bottom: 1rem;
 
 
 }
@@ -55,10 +65,17 @@ li{
 label{
     margin: 0 2em;
 }
+
 .form_input{
     border: 2px solid cadetblue;
     border-radius: 1em;
     padding: 5px 10px;
+}
+.form_input_card{
+    border: 2px solid cadetblue;
+    border-radius: 1em;
+    padding: 5px 10px;
+    width: 80%;
 }
 .fort_submit{
     border: 2px solid cadetblue;
