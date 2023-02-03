@@ -1,4 +1,5 @@
 let eventBus = new Vue()
+let now = new Date()
 Vue.component('Cards', {
     template: `
        <div class="Cards">
@@ -26,23 +27,23 @@ Vue.component('Cards', {
        </div>`,
     data() {
         return {
-            columnFirst:[],
-            columnSecond:[],
-            columnThird:[],
-            columnFourth:[],
+            columnFirst: [],
+            columnSecond: [],
+            columnThird: [],
+            columnFourth: [],
 
 
         }
     },
     mounted() {
         eventBus.$on('addColumnFirst', card => {
-                this.columnFirst.push(card)
+            this.columnFirst.push(card)
 
 
         })
         eventBus.$on('addColumnSecond', card => {
-                this.columnSecond.push(card)
-                this.columnFirst.splice(this.columnFirst.indexOf(card), 1)
+            this.columnSecond.push(card)
+            this.columnFirst.splice(this.columnFirst.indexOf(card), 1)
 
 
         })
@@ -55,6 +56,7 @@ Vue.component('Cards', {
         eventBus.$on('addColumnFourth', card => {
             this.columnFourth.push(card)
             this.columnThird.splice(this.columnThird.indexOf(card), 1)
+
 
         })
         eventBus.$on('addColumnComment', card => {
@@ -219,9 +221,12 @@ Vue.component('Columns3', {
     },
     methods: {
         updateColumnThird(card) {
+            if(new Date(card.deadline) > new Date(now.getFullYear(), now.getMonth(), now.getDate())){
+                card.done = true}
             eventBus.$emit('addColumnFourth', card)
 
         },
+
         updateColumnComment(card) {
             eventBus.$emit('addColumnComment', card)
         },
@@ -243,6 +248,9 @@ Vue.component('Columns4', {
                         <p>Срок дэдлайна: {{column.deadline}}</p>
                         <p v-show="!column.edit">Дата создания: {{column.data}}</p>
                         <p v-show="column.cancel">Дата изменения: {{column.dataEdit}}</p>
+                        <p v-show="column.done">Сделано в срок</p>
+                        <p v-show="!column.done">Задание просрочено</p>
+                        
                         
                         
                     </span>
@@ -304,7 +312,8 @@ Vue.component('create_card', {
                 status: 0,
                 edit: false,
                 comment: false,
-                cancel: false
+                cancel: false,
+                done:false,
 
 
             }
