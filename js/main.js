@@ -57,6 +57,13 @@ Vue.component('Cards', {
             this.columnThird.splice(this.columnThird.indexOf(card), 1)
 
         })
+        eventBus.$on('addColumnComment', card => {
+            this.columnSecond.push(card)
+            this.columnThird.splice(this.columnThird.indexOf(card), 1)
+
+
+        })
+
 
     },
 
@@ -126,6 +133,8 @@ Vue.component('Columns2', {
                         <p>Срок дэдлайна: {{column.deadline}}</p>
                         <p v-show="!column.edit">Дата создания: {{column.data}}</p>
                         <p v-show="column.cancel">Дата изменения: {{column.dataEdit}}</p>
+                        <p v-show="column.textComment != null ">Комментарий: {{column.textComment}}</p>
+                       
                         
                         <input type="checkbox"
                         @change.prevent="updateColumnTwo(column)">
@@ -171,21 +180,32 @@ Vue.component('Columns3', {
                         <p>Срок дэдлайна: {{column.deadline}}</p>
                         <p v-show="!column.edit">Дата создания: {{column.data}}</p>
                         <p v-show="column.cancel">Дата изменения: {{column.dataEdit}}</p>
+                        <p v-show="column.textComment != null ">Комментарий: {{column.textComment}}</p>
                         
-                        <input type="checkbox"
+                        <input type="checkbox" value="2"
+                        
+                        v-on:change.prevent="promptComment(column)"
+                        @change.prevent="updateColumnComment(column)" 
+                        >
+                        <label for="2">2</label>
+                        
+                        
+                        <input type="checkbox" value="4"
                         @change.prevent="updateColumnThird(column)">
+                        <label for="4">4</label>
+                        
                         <a href="#" v-show="!column.edit" v-on:click="column.edit = true">Изменить</a>
                         <a href="#" v-show="column.edit" 
                             v-on:click="column.edit = false" 
                             v-on:click="column.cancel = true" 
                             v-on:click.prevent="dateEditCard(column)">Закрыть</a>
-                            <form v-show="column.edit">
+                            <form class="formEdit" v-show="column.edit">
                                 <label for="name1">Изменить задачу:</label>
                                 <input class="form_input_card" id="name1" v-model="column.name" placeholder="task" >
                                 <label for="name2">Изменить описание:</label>
                                 <textarea class="form_input_card" id="name2" v-model="column.text"></textarea>
                             
-                        </form>
+                            </form>
                     </span>
                 </div>
        </div>`,
@@ -201,6 +221,12 @@ Vue.component('Columns3', {
         updateColumnThird(card) {
             eventBus.$emit('addColumnFourth', card)
 
+        },
+        updateColumnComment(card) {
+            eventBus.$emit('addColumnComment', card)
+        },
+        promptComment(card) {
+            card.textComment = prompt("Что изменить?", card.textComment)
         },
         dateEditCard(card) {
             card.dataEdit = new Date().toLocaleString()
@@ -271,11 +297,13 @@ Vue.component('create_card', {
             let card = {
                 name: this.name,
                 text: this.text,
+                textComment: this.textComment,
                 data: new Date().toLocaleString(),
                 dataEdit: null,
                 deadline: this.deadline,
                 status: 0,
                 edit: false,
+                comment: false,
                 cancel: false
 
 
@@ -284,7 +312,8 @@ Vue.component('create_card', {
                 eventBus.$emit('addColumnFirst', card),
                 this.name = null,
                 this.deadline = null,
-                this.text = null
+                this.text = null,
+                this.textComment = null
 
         },
 

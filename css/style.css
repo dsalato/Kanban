@@ -44,6 +44,9 @@ li{
 
 
 }
+.formEdit{
+    margin: 20px 0;
+}
 .column_btn{
     background-color: red;
     color: white;
