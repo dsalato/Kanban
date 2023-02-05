@@ -136,7 +136,10 @@ Vue.component('Columns2', {
                         <p v-show="!column.edit">Дата создания: {{column.data}}</p>
                         <p v-show="column.cancel">Дата изменения: {{column.dataEdit}}</p>
                         <p v-show="column.textComment != null ">Комментарий: {{column.textComment}}</p>
-                       
+                        <ul>
+                            <h4  v-show="column.backComment.length > 0">Комментарии:</h4>
+                            <li class="li_comment" v-for="comment in column.backComment">{{comment}}</li>
+                        </ul>
                         
                         <input type="checkbox"
                         @change.prevent="updateColumnTwo(column)">
@@ -156,6 +159,10 @@ Vue.component('Columns2', {
        </div>`,
     props: {
         columnSecond:{
+            type: Array,
+            required: false
+        },
+        backComment:{
             type: Array,
             required: false
 
@@ -182,12 +189,22 @@ Vue.component('Columns3', {
                         <p>Срок дэдлайна: {{column.deadline}}</p>
                         <p v-show="!column.edit">Дата создания: {{column.data}}</p>
                         <p v-show="column.cancel">Дата изменения: {{column.dataEdit}}</p>
-                        <p v-show="column.textComment != null ">Комментарий: {{column.textComment}}</p>
-                        
+                        <div>
+                            
+                            <ul>
+                                <h4  v-show="column.backComment.length > 0">Комментарии:</h4>
+                                <li class="li_comment" v-for="comment in column.backComment">{{comment}}</li>
+                            </ul>
+                            
+                            <form v-show="context" @submit.prevent="addComment(column)" @submit.prevent="promptComment()">
+                                    <label for="comment">Комментарий:</label>
+                                    <input class="input_comm" id="comment" v-model="comment" required>
+                                    <input type="submit" value="Отправить"  >
+                                    
+                            </form>
+                        </div>
                         <input type="checkbox" value="2"
-                        
-                        v-on:change.prevent="promptComment(column)"
-                        @change.prevent="updateColumnComment(column)" 
+                        v-on:change.prevent="promptComment()"
                         >
                         <label for="2">2</label>
                         
@@ -201,6 +218,7 @@ Vue.component('Columns3', {
                             v-on:click="column.edit = false" 
                             v-on:click="column.cancel = true" 
                             v-on:click.prevent="dateEditCard(column)">Закрыть</a>
+                            
                             <form class="formEdit" v-show="column.edit">
                                 <label for="name1">Изменить задачу:</label>
                                 <input class="form_input_card" id="name1" v-model="column.name" placeholder="task" >
@@ -208,9 +226,18 @@ Vue.component('Columns3', {
                                 <textarea class="form_input_card" id="name2" v-model="column.text"></textarea>
                             
                             </form>
+                            
                     </span>
                 </div>
        </div>`,
+    data() {
+        return {
+
+            comment:'',
+            context: false
+
+        }
+    },
     props: {
         columnThird:{
             type: Array,
@@ -224,14 +251,14 @@ Vue.component('Columns3', {
             if(new Date(card.deadline) > new Date(now.getFullYear(), now.getMonth(), now.getDate())){
                 card.done = true}
             eventBus.$emit('addColumnFourth', card)
-
         },
-
-        updateColumnComment(card) {
+        addComment(card){
+            card.backComment.push(this.comment)
+            this.comment = ''
             eventBus.$emit('addColumnComment', card)
         },
-        promptComment(card) {
-            card.textComment = prompt("Что изменить?", card.textComment)
+        promptComment(){
+            this.context = !this.context
         },
         dateEditCard(card) {
             card.dataEdit = new Date().toLocaleString()
@@ -248,8 +275,12 @@ Vue.component('Columns4', {
                         <p>Срок дэдлайна: {{column.deadline}}</p>
                         <p v-show="!column.edit">Дата создания: {{column.data}}</p>
                         <p v-show="column.cancel">Дата изменения: {{column.dataEdit}}</p>
-                        <p v-show="column.done">Сделано в срок</p>
-                        <p v-show="!column.done">Задание просрочено</p>
+                        <ul>
+                            <h4  v-show="column.backComment.length > 0">Комментарии:</h4>
+                            <li class="li_comment" v-for="comment in column.backComment">{{comment}}</li>
+                        </ul>
+                        <h2 class="h2_done_t" v-show="column.done">Сделано в срок</h2>
+                        <h2 class="h2_done" v-show="!column.done">Задание просрочено</h2>
                         
                         
                         
@@ -259,6 +290,11 @@ Vue.component('Columns4', {
        </div>`,
     props: {
         columnFourth:{
+            type: Array,
+            required: false
+
+        },
+        backComment:{
             type: Array,
             required: false
 
@@ -305,29 +341,21 @@ Vue.component('create_card', {
             let card = {
                 name: this.name,
                 text: this.text,
-                textComment: this.textComment,
                 data: new Date().toLocaleString(),
+                backComment: [],
                 dataEdit: null,
                 deadline: this.deadline,
                 status: 0,
                 edit: false,
-                comment: false,
                 cancel: false,
                 done:false,
-
-
             }
-
                 eventBus.$emit('addColumnFirst', card),
                 this.name = null,
                 this.deadline = null,
-                this.text = null,
-                this.textComment = null
-
+                this.text = null
         },
-
     },
-
     props: {
         columnFirst:{
             type: Array,

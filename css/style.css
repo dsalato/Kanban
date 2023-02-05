@@ -28,13 +28,23 @@ textarea{
     width: 40%;
     height: 80px;
 }
+h4{
+    text-align: left;
+}
+.h2_done_t{
+    color: darkgreen;
+    text-decoration: underline;
+}
+.h2_done{
+    color: darkred;
+    text-decoration: underline;
+}
 li{
-    border: 2px solid cadetblue;
-    display: flex;
-    justify-content: space-around;
-    padding: .5em 2rem;
-    margin: 1rem;
-    border-radius: 1em;
+
+    text-align: left;
+}
+.input_comm{
+    margin-bottom: 10px;
 }
 .column_div{
     border: 2px solid cadetblue;
