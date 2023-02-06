@@ -49,7 +49,6 @@ Vue.component('Cards', {
     methods:{
         modalCreate(){
             this.modal = !this.modal
-            console.log(this.modal)
         }
     },
     mounted() {
@@ -61,12 +60,16 @@ Vue.component('Cards', {
         eventBus.$on('addColumnSecond', card => {
             this.columnSecond.push(card)
             this.columnFirst.splice(this.columnFirst.indexOf(card), 1)
+            console.log(this.columnSecond)
+            this.columnSecond.sort((a, b) => a.rating > b.rating ? 1 : -1)
+            console.log(this.columnSecond)
 
 
         })
         eventBus.$on('addColumnThird', card => {
             this.columnThird.push(card)
             this.columnSecond.splice(this.columnSecond.indexOf(card), 1)
+            this.columnThird.sort((a, b) => a.rating > b.rating ? 1 : -1)
 
 
         })
@@ -153,6 +156,7 @@ Vue.component('Columns2', {
                     <span>
                         <p>Описание: {{column.text}}</p>
                         <p>Срок дэдлайна: {{column.deadline}}</p>
+                        <p>Приоритет: {{column.rating}}</p>
                         <p v-show="!column.edit">Дата создания: {{column.data}}</p>
                         <p v-show="column.cancel">Дата изменения: {{column.dataEdit}}</p>
                         <p v-show="column.textComment != null ">Комментарий: {{column.textComment}}</p>
@@ -208,6 +212,7 @@ Vue.component('Columns3', {
                     <span>
                         <p>Описание: {{column.text}}</p>
                         <p>Срок дэдлайна: {{column.deadline}}</p>
+                        <p>Приоритет: {{column.rating}}</p>
                         <p v-show="!column.edit">Дата создания: {{column.data}}</p>
                         <p v-show="column.cancel">Дата изменения: {{column.dataEdit}}</p>
                         <div>
@@ -344,7 +349,14 @@ Vue.component('create_card', {
                     <label for="name3">Добавить дэдлайн:</label>
                     <input class="form_input"  type="date" value="2023-02-02" id="name3" required v-model="deadline" >
                 </div>
-
+                <div>
+                    <label for="rating">Приоритет:</label>
+                    <select id="rating" v-model="rating">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                    </select>
+                </div>
                 <input class="fort_submit" type="submit" value="Добавить" @click="modalCreate"> 
             </div>
             
@@ -356,6 +368,7 @@ Vue.component('create_card', {
             name: null,
             text:null,
             deadline: null,
+            rating: null
         }
     },
     methods: {
@@ -363,6 +376,7 @@ Vue.component('create_card', {
             let card = {
                 name: this.name,
                 text: this.text,
+                rating: this.rating,
                 data: new Date().toLocaleString(),
                 backComment: [],
                 dataEdit: null,
@@ -372,11 +386,13 @@ Vue.component('create_card', {
                 edit: false,
                 cancel: false,
                 done:false,
+
             }
                 eventBus.$emit('addColumnFirst', card),
                 this.name = null,
                 this.deadline = null,
-                this.text = null
+                this.text = null,
+                this.rating = null
         },
     },
     props: {
