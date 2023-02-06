@@ -4,7 +4,17 @@ Vue.component('Cards', {
     template: `
        <div class="Cards">
            <h1>Kanban доска</h1>
-               <create_card></create_card>
+           <div>
+                <button class="modal_btn" @click="modalCreate">Создать задачу</button>
+                <div v-show="modal" class="modalbackground">
+                    <div class="modalwindow">
+                        <a @click="modalCreate"> &times </a>
+                        <create_card :modalCreate="modalCreate"></create_card>
+                    </div>
+                </div>
+            </div>
+                
+               
                <div class="cards_inner">
                     <div class="cards_item">
                         <h2>Запланированные задачи</h2>
@@ -31,8 +41,15 @@ Vue.component('Cards', {
             columnSecond: [],
             columnThird: [],
             columnFourth: [],
+            modal:false
 
 
+        }
+    },
+    methods:{
+        modalCreate(){
+            this.modal = !this.modal
+            console.log(this.modal)
         }
     },
     mounted() {
@@ -69,6 +86,7 @@ Vue.component('Cards', {
 
     },
 
+
 })
 Vue.component('Columns1', {
     template: `
@@ -82,8 +100,10 @@ Vue.component('Columns1', {
                         
                         <input type="checkbox"
                         @change.prevent="updateColumn(column)">
+                        <label for="2">2</label>
+                        
                     </span>
-                    <button class="column_btn" @click="deleteCard(column)" >&times</button>
+                    <button class="column_btn" @click="deleteCard(column)" >&times </button>
                     <a href="#" v-show="!column.edit" v-on:click="column.edit = true">Изменить</a>
                     <a href="#" v-show="column.edit" 
                         v-on:click="column.edit = false" 
@@ -143,6 +163,7 @@ Vue.component('Columns2', {
                         
                         <input type="checkbox"
                         @change.prevent="updateColumnTwo(column)">
+                        <label for="3">3</label>
                         <a href="#" v-show="!column.edit" v-on:click="column.edit = true">Изменить</a>
                         <a href="#" v-show="column.edit" 
                             v-on:click="column.edit = false" 
@@ -250,6 +271,7 @@ Vue.component('Columns3', {
         updateColumnThird(card) {
             if(new Date(card.deadline) > new Date(now.getFullYear(), now.getMonth(), now.getDate())){
                 card.done = true}
+            card.dataDone = new Date().toLocaleString()
             eventBus.$emit('addColumnFourth', card)
         },
         addComment(card){
@@ -275,6 +297,7 @@ Vue.component('Columns4', {
                         <p>Срок дэдлайна: {{column.deadline}}</p>
                         <p v-show="!column.edit">Дата создания: {{column.data}}</p>
                         <p v-show="column.cancel">Дата изменения: {{column.dataEdit}}</p>
+                        <p>Дата сдачи: {{column.dataDone}}</p>
                         <ul>
                             <h4  v-show="column.backComment.length > 0">Комментарии:</h4>
                             <li class="li_comment" v-for="comment in column.backComment">{{comment}}</li>
@@ -307,7 +330,7 @@ Vue.component('Columns4', {
 
 Vue.component('create_card', {
     template: `
-       <form @submit.prevent="createCard">
+        <form @submit.prevent="createCard">
            <div class="form_create">
                <div class="form_div">
                     <label for="name1">Добавить задачу:</label>
@@ -322,18 +345,17 @@ Vue.component('create_card', {
                     <input class="form_input"  type="date" value="2023-02-02" id="name3" required v-model="deadline" >
                 </div>
 
-                <input class="fort_submit" type="submit" value="Добавить"> 
+                <input class="fort_submit" type="submit" value="Добавить" @click="modalCreate"> 
             </div>
-       </form>`,
+            
+       </form>
+       `,
 
     data() {
         return {
             name: null,
             text:null,
             deadline: null,
-
-
-
         }
     },
     methods: {
@@ -344,6 +366,7 @@ Vue.component('create_card', {
                 data: new Date().toLocaleString(),
                 backComment: [],
                 dataEdit: null,
+                dataDone:null,
                 deadline: this.deadline,
                 status: 0,
                 edit: false,
@@ -361,6 +384,9 @@ Vue.component('create_card', {
             type: Array,
             required: false
 
+        },
+        modalCreate:{
+            type: Function,
         }
     },
 
